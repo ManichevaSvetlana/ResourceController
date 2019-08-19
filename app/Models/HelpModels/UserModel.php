@@ -16,6 +16,6 @@ class UserModel extends PermissionModel
     {
         parent::boot();
 
-        static::addGlobalScope(new UserAccessScope);
+        static::addGlobalScope(new UserAccessScope); // get entities only for the current user || all entities if request is from Laravel Nova (admin panel)
     }
 }

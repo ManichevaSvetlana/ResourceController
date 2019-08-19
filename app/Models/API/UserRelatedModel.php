@@ -1,9 +1,7 @@
 <?php
 
-namespace App\API;
+namespace App\Models\API;
 
-use App\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserRelatedModel extends \App\Models\HelpModels\UserRelatedModel
@@ -16,6 +14,23 @@ class UserRelatedModel extends \App\Models\HelpModels\UserRelatedModel
     protected $fillable = [
         'name', 'user_model_id',
     ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['user_id'];
+
+    /**
+     * Database: Get the user_id attr from the Tab related model
+     *
+     * @return mixed
+     */
+    public function getUserIdAttribute()
+    {
+        return UserModel::find($this->user_model_id)->user_id ?? null;
+    }
 
     /**
      * Relationship: Get the user models by user_model_id attr

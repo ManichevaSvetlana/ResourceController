@@ -1,9 +1,9 @@
 <?php
 
-namespace App\API;
+namespace App\Models\API;
 
+use App\Models\HelpModels\UserRelatedModel;
 use App\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 

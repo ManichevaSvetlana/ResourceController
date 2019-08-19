@@ -25,7 +25,7 @@ class UserRelatedAccessScope implements Scope
     {
         if(auth()->check()){
             $user = auth()->user();
-            if(strrpos(Route::currentRouteName(), 'nova') !== false && $user->admin()) return $builder;
+            if(strrpos(Route::currentRouteName(), 'nova') !== false && $user->admin()) return $builder;  // if the route is Laravel Nova (admin panel)
             return $builder->whereIn('user_model_id', $user->userModels()->pluck('id')->toArray());
         }
         return $builder;

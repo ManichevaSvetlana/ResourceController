@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\HelpControllers;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
-class UserResourceController extends Controller
+class UserResourceController extends ResourceController
 {
-    //
+    /*
+     * Var: the name of the policies for methods (empty if no policies needed).
+     *
+     * @array
+     */
+    protected $policies = ['delete' => 'userAccess', 'update' => 'userAccess'];
 }

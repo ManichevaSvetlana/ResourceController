@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\HelpControllers;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-
-class AdminResourceController extends Controller
+class AdminResourceController extends ResourceController
 {
-    //
+    /*
+    * Var: the name of the policies for admin methods: update, store, delete.
+    *
+    * @array
+    */
+    protected $policies = ['update' => 'adminAccess', 'store' => 'adminAccess', 'delete' => 'adminAccess'];
 }

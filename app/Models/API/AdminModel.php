@@ -1,6 +1,6 @@
 <?php
 
-namespace App\API;
+namespace App\Models\API;
 
 use App\Models\HelpModels\PermissionModel;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +13,6 @@ class AdminModel extends PermissionModel
      * @var array
      */
     protected $fillable = [
-        'name', 'user_id',
+        'name'
     ];
 }

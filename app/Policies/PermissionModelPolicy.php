@@ -74,7 +74,6 @@ class PermissionModelPolicy
     /**
      * Admin access to the entity.
      * @param User $user
-     * @param Model $resource
      * @return boolean
      */
     public function adminAccess(User $user)
