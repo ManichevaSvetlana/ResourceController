@@ -11,10 +11,5 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/{any}', function () { return view('index'); } )->where('any', '^(?!api|admin|nova).*$'); // where not admin routes
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
