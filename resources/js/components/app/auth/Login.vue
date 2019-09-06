@@ -80,7 +80,7 @@
                 e.preventDefault();
                 this.form.validateFields((err, values) => {
                     if (!err) {
-                        User.$login(values)
+                        User.$login(values).then(re => {console.log(User.query().first())})
                     }
                 });
             },

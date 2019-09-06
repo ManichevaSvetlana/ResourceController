@@ -34,6 +34,15 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'is_admin',
+    ];
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -41,6 +50,16 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Database: Get the is_admin attribute
+     *
+     * @return bool
+     */
+    public function getIsAdminAttribute() : bool
+    {
+        return $this->id ? $this->admin() : false;
+    }
 
     /**
      * Relationship: Get the user's userModels

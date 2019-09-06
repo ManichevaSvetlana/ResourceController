@@ -1,4 +1,5 @@
 import { Model } from '@vuex-orm/core'
+import VuexModel from "../VuexModel";
 
 export default class AdminModel extends Model {
     static entity = 'admin_models';

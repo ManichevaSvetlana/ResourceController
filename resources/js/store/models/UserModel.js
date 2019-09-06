@@ -1,8 +1,9 @@
 import { Model } from '@vuex-orm/core'
 import User from "./User";
 import UserRelatedModel from "./UserRelatedModel";
+import VuexModel from "../VuexModel";
 
-export default class UserModel extends Model {
+export default class UserModel extends VuexModel {
     static entity = 'users_models';
 
     static fields () {

@@ -13,6 +13,7 @@ export default class User extends VuexModel {
             id: this.increment(),
             name: this.attr(''),
             email: this.attr(''),
+            is_admin: this.attr(false),
             user_models: this.hasMany(UserModel, 'user_id'),
 
             access_token: this.attr(''),
@@ -54,11 +55,12 @@ export default class User extends VuexModel {
                 data: form
             }).then(user => {
                 localStorage.setItem('auth__token', user.access_token)
-                localStorage.setItem('auth__token_end', new Date().getTime() + user.expires_in)
+                localStorage.setItem('auth__token_end', new Date().getTime() + user.expires_in * 1000)
                 localStorage.setItem('auth__user', JSON.stringify({
                     id: user.id,
                     name: user.name,
                     email: user.email,
+                    is_admin: user.is_admin,
                     access_token: user.access_token,
                 }))
                 router.push({name: 'dashboard'});

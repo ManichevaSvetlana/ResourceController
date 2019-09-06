@@ -9,10 +9,10 @@ class VuexModel extends Model {
     *
     * @return boolean
     */
-    static $checkAuth() {
+    static $checkAuth(){
         if (localStorage.getItem('auth__token')) {
             let end = localStorage.getItem('auth__token_end');
-            if ((new Date()).getTime() > end) {
+            if ((new Date()).getTime() > parseInt(end)) {
                 this.$removeAuth() // TODO: token refresh
                 return false;
             }
@@ -56,11 +56,13 @@ class VuexModel extends Model {
                 VuexModel.$updateToken()
                 return super[action](data)
             } else return new Promise((resolve, reject) => {
-                if(action !== '$delete') reject({message: 'You need to login.'})
+                if (action !== '$delete') reject({message: 'You need to login.'})
                 else resolve(true)
             })
         } catch (error) {
-            return new Promise((resolve, reject) => {reject(error)})
+            return new Promise((resolve, reject) => {
+                reject(error)
+            })
         }
 
     }
@@ -108,6 +110,26 @@ class VuexModel extends Model {
     */
     static $fetch(data) {
         return this.$performAction('$fetch', data)
+    }
+
+    /*
+    * Fetch with pagination
+    *
+    * @return Promise
+    */
+    static $paginate(page) {
+        return new Promise((resolve, reject) => {
+            this.$fetch({
+                query: {page: page}
+            }).then(response => {
+                this.insert({
+                    data: response.data.data
+                })
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
     }
 }
 

@@ -27,6 +27,8 @@ Vue.use(Antd)
 Vue.use(Notifications)
 /* Registering components */
 Vue.component('vue-app', require('./components/App.vue').default);
+
+Vue.component('resources-table', require('./components/app/resources/resource/Table').default);
 /* End of registering components */
 
 /*
