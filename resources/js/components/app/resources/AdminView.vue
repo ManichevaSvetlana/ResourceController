@@ -1,35 +1,13 @@
 <template>
-    <div>
-        <a-layout style="background: white">
-            <a-layout>
-                <a-layout-sider width="200" style="background: #fff">
-                    <a-menu
-                        style="width: 256px"
-                        mode="vertical"
-                    >
-                        <a-menu-item :key="element.name" v-for="element in elements" @click="setActiveItem(element)">
-                            {{element.name}}
-                        </a-menu-item>
-                    </a-menu>
-                </a-layout-sider>
-                <a-layout style="padding: 0 24px 24px; background: white; ">
-                    <a-layout-content :style="{ background: 'white', margin: 0, minHeight: '280px' }">
-                        <h2 style="color: rgb(104, 106, 111);">{{activeItem.name}}</h2>
-                        <resources-table :columns="activeItem.columns" :element="activeItem.element"></resources-table>
-                    </a-layout-content>
-                </a-layout>
-            </a-layout>
-        </a-layout>
-    </div>
+    <resources-view :elements="elements"></resources-view>
 </template>
 <script>
-    import {User, AdminAccessModel, UserModel, UserRelatedModel} from '../../../store/models';
+    import {User, UserModel, UserRelatedModel} from '../../../store/models';
 
     export default {
         data(){
             return{
-                activeItem: null,
-                elements: [
+                elements: [ // menu items with required info
                     {
                         element: UserModel,
                         name: 'User Related Models',
@@ -95,25 +73,6 @@
                 ]
             }
         },
-        created()
-        {
-            this.activeItem = this.elements[0];
-        },
-        methods: {
-            setActiveItem(element)
-            {
-                this.activeItem = element;
-            }
-        },
     }
 
 </script>
-<style>
-    .ant-layout-sider-dark{
-        flex: 0 0 255px !important;
-        max-width: 300px !important;
-        min-width: 200px;
-        width: 255px !important;
-        background: rgb(255, 255, 255);
-    }
-</style>

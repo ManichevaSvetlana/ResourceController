@@ -29,6 +29,7 @@ Vue.use(Notifications)
 Vue.component('vue-app', require('./components/App.vue').default);
 
 Vue.component('resources-table', require('./components/app/resources/resource/Table').default);
+Vue.component('resources-view', require('./components/app/resources/resource/ResourcesView').default);
 /* End of registering components */
 
 /*

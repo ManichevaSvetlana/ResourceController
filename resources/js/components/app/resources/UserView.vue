@@ -1,13 +1,67 @@
 <template>
-
+    <resources-view :elements="elements"></resources-view>
 </template>
-
 <script>
+    import {UserModel, UserRelatedModel} from '../../../store/models';
+
     export default {
-        name: "AdminView"
+        data(){
+            return{
+                elements: [ // menu items with required info
+                    {
+                        element: UserModel,
+                        name: 'User Related Models',
+                        columns: [{
+                            title: 'Id',
+                            dataIndex: 'id',
+                            scopedSlots: {customRender: 'id'},
+                        }, {
+                            title: 'Name',
+                            dataIndex: 'name',
+                            editable: true,
+                            type: 'text',
+                            scopedSlots: {customRender: 'name'},
+                        }, {
+                            title: 'operation',
+                            dataIndex: 'operation',
+                            scopedSlots: { customRender: 'operation' },
+                        }]
+                    },
+                    {
+                        element: UserRelatedModel,
+                        name: 'User Related Models Through',
+                        columns: [{
+                            title: 'Id',
+                            dataIndex: 'id',
+                            scopedSlots: {customRender: 'id'},
+                        }, {
+                            title: 'Name',
+                            dataIndex: 'name',
+                            editable: true,
+                            type: 'text',
+                            scopedSlots: {customRender: 'name'},
+                        }, {
+                            title: 'User Model',
+                            dataIndex: 'user_model_name',
+                            editable: true,
+                            type: 'select',
+                            selectProperty: 'user_model_id',
+                            searchElement: UserModel,
+                            selectOptions: [],
+                            selectPlaceholder: 'Find a user model by typing a name',
+                            searchField: 'name',
+                            scopedSlots: {customRender: 'user_model_name'},
+                        }, {
+                            title: 'operation',
+                            dataIndex: 'operation',
+                            scopedSlots: { customRender: 'operation' },
+                        }]
+                    },
+                    // TODO: admin models
+
+                ]
+            }
+        },
     }
+
 </script>
-
-<style scoped>
-
-</style>

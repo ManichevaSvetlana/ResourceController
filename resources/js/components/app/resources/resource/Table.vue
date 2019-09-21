@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!--TODO: add "Create a new model" button-->
         <!--Resources table-->
         <a-table :columns="columns" :dataSource="data" :loading="loading" :pagination="false" bordered>
             <!--Resources columns (fields)-->
@@ -91,11 +92,11 @@
         props: ['columns', 'element'],
         data() {
             return {
-                cacheData: [],
-                data: [],
-                total: 0,
-                loading: false,
-                pagination: {total: 0, current_page: 0}
+                cacheData: [], // cached data for reverting changes
+                data: [], // table data
+                total: 0, // total elements from database
+                loading: false, // if elements are loading
+                pagination: {total: 0, current_page: 0} // pagination info
             }
         },
         /**
@@ -120,6 +121,14 @@
                 },
          },
         methods: {
+            /**
+             * Handle @change in select
+             *
+             * @param value
+             * @param column
+             * @param record
+             * @return void
+             */
             handleChange(value, column, record)
             {
                 let arr = value.split(" , ");
@@ -127,12 +136,25 @@
                 record[column.dataIndex] = arr[1];
                 record[column.selectProperty] = arr[0];
             },
+            /**
+             * Handle @input in select search
+             *
+             * @param value
+             * @param column
+             * @return void
+             */
             handleSearch(value, column)
             {
                 column.searchElement.$search({field: column.searchField, search: value}).then(response => {
                     column.selectOptions= response.result;
                 }).catch(error => {this.$notifyError(error);})
             },
+            /**
+             * Destroy an element
+             *
+             * @param record
+             * @return void
+             */
             destroy(record) {
                 let resource = Object.assign({}, record);
                 this.data = this.data.filter(item => item.id !== record.id);
