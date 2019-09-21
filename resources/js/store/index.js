@@ -4,7 +4,7 @@ import VuexORM from '@vuex-orm/core';
 import VuexORMAxios from '@vuex-orm/plugin-axios'
 import VuexOrmCrudApi from '@peterquentin/vuex-orm-crud-api';
 // models
-import {User, AdminModel, UserModel, UserRelatedModel} from './models';
+import {User, AdminAccessModel, UserModel, UserRelatedModel} from './models';
 
 Vue.use(Vuex);
 
@@ -14,7 +14,7 @@ VuexORM.use(VuexOrmCrudApi, {
 });
 
 database.register(User, {});
-database.register(AdminModel, {});
+database.register(AdminAccessModel, {});
 database.register(UserModel, {});
 database.register(UserRelatedModel, {});
 

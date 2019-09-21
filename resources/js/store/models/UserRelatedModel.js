@@ -16,7 +16,7 @@ export default class UserRelatedModel extends VuexModel {
 
     static methodConf = {
         http: {
-            url: '/users_related_models'
+            url: '/user-related-models'
         }
     }
 }

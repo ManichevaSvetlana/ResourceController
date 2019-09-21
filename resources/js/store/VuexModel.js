@@ -1,6 +1,6 @@
 import {Model} from '@vuex-orm/core'
 import router from '../router'
-import {User, AdminModel, UserModel, UserRelatedModel} from './models';
+import {User, AdminAccessModel, UserModel, UserRelatedModel} from './models';
 
 class VuexModel extends Model {
     /*
@@ -26,7 +26,7 @@ class VuexModel extends Model {
     * @return void
     */
     static $updateToken() {
-        let models = [User, AdminModel, UserModel, UserRelatedModel];
+        let models = [User, AdminAccessModel, UserModel, UserRelatedModel];
         models.forEach(model => {
             model.methodConf.http.headers['Authorization'] = 'Bearer ' + localStorage.getItem('auth__token');
         })
@@ -123,8 +123,25 @@ class VuexModel extends Model {
                 query: {page: page}
             }).then(response => {
                 this.insert({
-                    data: response.data.data
+                    data: response.data
                 })
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }
+
+    /*
+    * Fetch with pagination
+    *
+    * @return Promise
+    */
+    static $search(query) {
+        return new Promise((resolve, reject) => {
+            this.$fetch({
+                query: query
+            }).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

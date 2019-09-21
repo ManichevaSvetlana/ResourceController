@@ -55,8 +55,8 @@
         name: "Login",
         data() {
             return {
-                email: '', // User's email
-                password: '' // User's password
+                email: 'admin@test.test', // User's email
+                password: 'password' // User's password
             }
         },
         /*

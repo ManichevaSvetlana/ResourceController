@@ -87,6 +87,13 @@ class ResourceController extends Controller implements ResourceInterface
     protected $policies = [];
 
     /*
+     * Var: the array of the model's fields that will be returned after search request
+     *
+     * @array
+     */
+    protected $searchFields = ['*'];
+
+    /*
      * Var: the resource model.
      *
      * @bool
@@ -108,11 +115,13 @@ class ResourceController extends Controller implements ResourceInterface
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return Response
      * @throws \Exception
      */
-    public function index()
+    public function index(Request $request)
     {
+        if($request->has('field') && $request->has('search')) return $this->search($request);
         $this->authorizeRequest('index', $this->model);
         if (!empty($this->userMethod)) return auth()->user()[$this->userMethod]()->first();
         $resources = $this->model->orderBy($this->orderBy, $this->order)->with($this->relations);
@@ -139,7 +148,7 @@ class ResourceController extends Controller implements ResourceInterface
     public function store(Request $request)
     {
         $this->authorizeRequest('store', $this->model);
-        $request['user_id'] = auth()->user()->id;
+        if(!$request->has('user_id') || !auth()->user()->admin()) $request['user_id'] = auth()->user()->id;
         $storable = empty($this->storable) ? $request->all() : $request->only($this->storable);
         if ($this->updateOrCreate) {
             $updateOrCreateArray = [];
@@ -187,7 +196,7 @@ class ResourceController extends Controller implements ResourceInterface
      */
     public function update(Request $request, $id)
     {
-        $request['user_id'] = auth()->user()->id;
+        if(!$request->has('user_id') || !auth()->user()->admin()) $request['user_id'] = auth()->user()->id;
         if (!$this->model->find($id) && $this->updateOrCreate) return $this->store($request);
         $resource = $this->model->findOrFail($id);
         $this->authorizeRequest('update', $resource);
@@ -209,6 +218,20 @@ class ResourceController extends Controller implements ResourceInterface
         $this->authorizeRequest('delete', $resource);
         $resource->delete();
         return response()->json(['message' => 'The ' . $this->getClassName() . ' has been deleted successfully.'], 200);
+    }
+
+    /**
+     * Search for entities by its [field].
+     *
+     * @param Request $request
+     * @return Response
+     *
+     * @throws \Exception
+     */
+    public function search(Request $request)
+    {
+        $this->authorizeRequest('index', $this->model);
+        return response()->json(['result' => $this->model->where($request->field, 'like', "%$request->search%")->select($this->searchFields)->get()]);
     }
 
     /**

@@ -25,7 +25,7 @@ class UserAccessScope implements Scope
     {
         if(auth()->check()){
             $user = auth()->user();
-            if(strrpos(Route::currentRouteName(), 'nova') !== false && $user->admin()) return $builder; // if the route is Laravel Nova (admin panel)
+            if($user->admin()) return $builder; // if the user is admin (could be changed to nova rout checkout: strrpos(Route::currentRouteName(), 'nova') !== false)
             return $builder->where('user_id', $user->id);
         }
         return $builder;

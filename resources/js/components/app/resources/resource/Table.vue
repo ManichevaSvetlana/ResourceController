@@ -1,34 +1,78 @@
 <template>
     <div>
+        <!--Resources table-->
         <a-table :columns="columns" :dataSource="data" :loading="loading" :pagination="false" bordered>
-            <template v-for="col in columns" :slot="col.name" slot-scope="text, record, index">
-                <div :key="col.name" v-if="col.editable">
-                    <a-input
-                        v-if="record.editable"
-                        style="margin: -5px 0"
-                        :value="text"
-                        @change="e => handleChange(e.target.value, record.key, col)"
-                    />
-                    <template v-else>{{text}}</template>
+            <!--Resources columns (fields)-->
+            <template v-for="col in columns" :slot="col.dataIndex" slot-scope="text, record, index">
+                <!--Editable columns-->
+                <div :key="col.dataIndex" v-if="col.editable">
+                    <div v-if="record.editable">
+                        <a-select
+                            showSearch
+                            :notFoundContent="null"
+                            :defaultActiveFirstOption="false"
+                            :showArrow="false"
+                            :filterOption="false"
+                            style="width: 100%; margin: -5px 0"
+                            :placeholder="col.selectPlaceholder"
+                            v-if="col.type == 'select'"
+                            @search="(value) => { handleSearch(value, col) }"
+                            @change="(value) => { handleChange(value, col, record) }"
+                        >
+                            <a-select-option v-for="item in col.selectOptions" :key='item.id + " , " + item.name'>{{item.name}}</a-select-option>
+                        </a-select>
+                        <a-input
+                            style="margin: -5px 0"
+                            v-model="record[col.dataIndex]"
+                            v-else
+                        />
+                    </div>
+                    <template v-else>{{record[col.dataIndex]}}</template>
                 </div>
-                <div :key="col.name" v-else>
-                    <template>{{text}}</template>
+                <!--End of Editable columns-->
+                <!--Not editable columns-->
+                <div :key="col.dataIndex" v-else>
+                    <template>{{record[col.dataIndex]}}</template>
                 </div>
+                <!--End of Not editable columns-->
             </template>
+            <!--End of Resources columns (fields)-->
+            <!--Actions column in the table-->
             <template slot="operation" slot-scope="text, record, index">
-                <div class='editable-row-operations'>
-        <span v-if="record.editable">
-          <a @click="() => save(record.key)">Save</a>
-          <a-popconfirm title='Sure to cancel?' @confirm="() => cancel(record.key)">
-            <a>Cancel</a>
-          </a-popconfirm>
-        </span>
-                    <span v-else>
-          <a @click="() => edit(record.key)">Edit</a>
-        </span>
+                <!--Dropdown with actions: edit | delete-->
+                <a-dropdown :trigger="['click']"  v-if="!record.editable">
+                    <a class="ant-dropdown-link" href="#">
+                        Action
+                        <a-icon type="down"/>
+                    </a>
+                    <a-menu slot="overlay">
+                        <a-menu-item key="1">
+                            <a @click="() => edit(record.key)">Edit</a>
+                        </a-menu-item>
+                        <a-menu-item key="0">
+                            <a-popconfirm
+                                title="Sure to delete?"
+                                @confirm="() => destroy(record)">
+                                <a href="javascript:;">Delete</a>
+                            </a-popconfirm>
+                        </a-menu-item>
+                    </a-menu>
+                </a-dropdown>
+                <!--End of Dropdown with actions: edit | delete-->
+                <!--Save/ Cancel th edited record-->
+                <div class='editable-row-operations' v-else>
+                    <span>
+                        <a @click="() => save(record.key)" class="success">Save</a>
+                        <a-popconfirm title='Sure to cancel?' @confirm="() => cancel(record.key)">
+                            <a class="error">Cancel</a>
+                        </a-popconfirm>
+                    </span>
                 </div>
+                <!--End of Save/ Cancel th edited record-->
             </template>
+            <!--End of Actions column in the table-->
         </a-table>
+        <!--End of Resources table-->
         <br>
         <br>
         <!--Pagination numbers-->
@@ -37,17 +81,15 @@
                 <a-pagination :total="pagination.total" :pageSize="10" @change="changePage"
                               style="float:right"/>
             </a-col>
-
         </a-row>
         <!--End of pagination numbers-->
     </div>
-
 </template>
 <script>
 
     export default {
         props: ['columns', 'element'],
-        data () {
+        data() {
             return {
                 cacheData: [],
                 data: [],
@@ -56,53 +98,106 @@
                 pagination: {total: 0, current_page: 0}
             }
         },
-        created()
-        {
+        /**
+         * Vue created component: load resources
+         *
+         * @return void
+         */
+        created() {
             this.clickFirstPage()
         },
-        watch:
-        {
-            element()
-            {
-                this.clickFirstPage()
-            }
-        },
+        /*
+        * Watched variables
+        */
+        watch: {
+                /**
+                 * If the element (model) changes => load resources
+                 *
+                 * @return void
+                 */
+                element() {
+                    this.clickFirstPage()
+                },
+         },
         methods: {
-            handleChange (value, key, column) {
-                const newData = [...this.data]
-                const target = newData.filter(item => key === item.key)[0]
-                if (target) {
-                    target[column] = value
-                    this.data = newData
-                }
+            handleChange(value, column, record)
+            {
+                let arr = value.split(" , ");
+
+                record[column.dataIndex] = arr[1];
+                record[column.selectProperty] = arr[0];
             },
-            edit (key) {
+            handleSearch(value, column)
+            {
+                column.searchElement.$search({field: column.searchField, search: value}).then(response => {
+                    column.selectOptions= response.result;
+                }).catch(error => {this.$notifyError(error);})
+            },
+            destroy(record) {
+                let resource = Object.assign({}, record);
+                this.data = this.data.filter(item => item.id !== record.id);
+                this.total--;
+
+                this.element.$delete({
+                    params: {id: record.id}
+                }).catch(e => {
+                    this.$notifyError(e);
+                    this.data = [resource, ...this.data];
+                    this.total ++;
+
+                    this.cacheData = this.data.map(item => ({ ...item }))
+                })
+            },
+            /**
+             * Show the edit form
+             *
+             * @return void
+             */
+            edit(key) {
                 const newData = [...this.data]
-                const target = newData.filter(item => key === item.key)[0]
+                const target = newData.filter(item => key === item.id)[0]
                 if (target) {
                     target.editable = true
                     this.data = newData
                 }
             },
-            save (key) {
+            /**
+             * Save the edited record
+             *
+             * @return void
+             */
+            save(key) {
                 const newData = [...this.data]
-                const target = newData.filter(item => key === item.key)[0]
+                const target = newData.filter(item => key === item.id)[0]
                 if (target) {
-                    delete target.editable
-                    this.data = newData
-                    this.cacheData = newData.map(item => ({ ...item }))
-                }
-            },
-            cancel (key) {
-                const newData = [...this.data]
-                const target = newData.filter(item => key === item.key)[0]
-                if (target) {
-                    Object.assign(target, this.cacheData.filter(item => key === item.key)[0])
-                    delete target.editable
-                    this.data = newData
-                }
-            },
+                    this.element.$update({
+                        params: {id: key},
+                        data: target
+                    }).then(response => {
+                        delete target.editable
+                        this.data = newData
+                        this.cacheData = newData.map(item => ({...item}))
+                    }).catch(e => {
+                        this.$notifyError(e);
+                        this.cancel(key)
+                    })
 
+                }
+            },
+            /**
+             * Cancel editing the record
+             *
+             * @return void
+             */
+            cancel(key) {
+                const newData = [...this.data]
+                const target = newData.filter(item => key === item.id)[0]
+                if (target) {
+                    Object.assign(target, this.cacheData.filter(item => key === item.id)[0])
+                    delete target.editable
+                    this.data = newData
+                }
+            },
             /**
              * Click the first pagination page
              *
@@ -126,14 +221,19 @@
             changePage(page) {
                 this.loading = true;
                 this.element.$paginate(page).then(response => {
-                    let data = response.data;
+                    let data = response;
                     this.pagination.current_page = data.current_page;
                     this.pagination.total = data.total;
+                    data.data.forEach(item => {
+                        item.key = item.id
+                    })
                     this.data = data.data;
-                    this.cacheData = this.data.map(item => ({ ...item }))
+                    this.cacheData = this.data.map(item => ({...item}))
                 }).catch(e => {
                     this.$notifyError(e);
-                }).finally(response => {this.loading = false;});
+                }).finally(response => {
+                    this.loading = false;
+                });
             },
 
         },

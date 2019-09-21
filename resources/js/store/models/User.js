@@ -24,21 +24,28 @@ export default class User extends VuexModel {
 
     static methodConf = {
         http: {
-            url: '/auth'
+            url: ''
         },
         methods: {
             $create: {
                 name: 'get',
                 http: {
-                    url: '/login',
+                    url: '/auth/login',
                     method: 'post',
                 },
             },
             $delete: {
                 name: 'delete',
                 http: {
-                    url: '/logout',
+                    url: '/auth/logout',
                     method: 'post',
+                },
+            },
+            $fetch: {
+                name: 'fetch',
+                http: {
+                    url: '/users',
+                    method: 'get',
                 },
             }
         }

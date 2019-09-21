@@ -20,7 +20,17 @@ class UserRelatedModel extends \App\Models\HelpModels\UserRelatedModel
      *
      * @var array
      */
-    protected $appends = ['user_id'];
+    protected $appends = ['user_id', 'user_model_name'];
+
+    /**
+     * Database: Get the user model name
+     *
+     * @return string
+     */
+    public function getUserModelNameAttribute()
+    {
+        return $this->userModel ? $this->userModel->name : null;
+    }
 
     /**
      * Database: Get the user_id attr from the Tab related model
@@ -33,11 +43,11 @@ class UserRelatedModel extends \App\Models\HelpModels\UserRelatedModel
     }
 
     /**
-     * Relationship: Get the user models by user_model_id attr
+     * Relationship: Get the user model by user_model_id attr
      *
      * @return BelongsTo
      */
-    public function userModels()
+    public function userModel()
     {
         return $this->belongsTo(UserModel::class);
     }

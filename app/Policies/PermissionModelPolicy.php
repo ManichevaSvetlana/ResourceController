@@ -68,7 +68,7 @@ class PermissionModelPolicy
      */
     public function userAccess(User $user, Model $resource)
     {
-        return $resource->user_id == $user->id;
+        return $resource->user_id == $user->id || $user->admin(); // remove admin checkout in case of using only nova permissions (admin dashboard)
     }
 
     /**

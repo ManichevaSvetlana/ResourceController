@@ -4,7 +4,7 @@ import UserRelatedModel from "./UserRelatedModel";
 import VuexModel from "../VuexModel";
 
 export default class UserModel extends VuexModel {
-    static entity = 'users_models';
+    static entity = 'user_models';
 
     static fields () {
         return {
@@ -18,7 +18,7 @@ export default class UserModel extends VuexModel {
 
     static methodConf = {
         http: {
-            url: '/users_models'
+            url: '/user-models'
         }
     }
 

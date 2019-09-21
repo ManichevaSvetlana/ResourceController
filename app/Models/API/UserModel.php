@@ -19,6 +19,25 @@ class UserModel extends \App\Models\HelpModels\UserModel
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'user_name',
+    ];
+
+    /**
+     * Database: Get the user name attr
+     *
+     * @return string
+     */
+    public function getUserNameAttribute()
+    {
+        return $this->user ? $this->user->name.' - '.$this->user->email : null;
+    }
+
+    /**
      * Relationship: Get the user by user_id attr
      *
      * @return BelongsTo

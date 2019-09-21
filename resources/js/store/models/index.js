@@ -1,6 +1,6 @@
 import User from './User'
-import AdminModel from './AdminModel'
+import AdminAccessModel from './AdminAccessModel'
 import UserModel from './UserModel'
 import UserRelatedModel from './UserRelatedModel'
 
-export {User, AdminModel, UserModel, UserRelatedModel}
+export {User, AdminAccessModel, UserModel, UserRelatedModel}

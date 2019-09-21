@@ -16,5 +16,6 @@ use Illuminate\Http\Request;
 Route::namespace('API')->group(function () {
     Route::group(['middleware' => 'api'], function () {
         require base_path('routes/api/auth.php');
+        require base_path('routes/api/resources.php');
     });
 });
