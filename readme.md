@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://ibb.co/cYFyxSB">
+<img src="https://i.ibb.co/vXPcD6F/2019-09-21-17-07-19.png">
 </p>
 
 ## Features
@@ -55,7 +55,7 @@ php artisan run
 Open http://127.0.0.1:8000/login in your browser. You should see login view:
 
 <p align="center">
-<img src="https://ibb.co/RcqMjZ0">
+<img src="https://i.ibb.co/KWJQKRq/2019-09-21-17-36-31.png">
 </p>
 
 Credentials for user:
@@ -68,7 +68,7 @@ password - `password`
 
 Dashboard view:
 <p align="center">
-<img src="https://ibb.co/cYFyxSB">
+<img src="https://i.ibb.co/vXPcD6F/2019-09-21-17-07-19.png">
 </p>
 
 You can delete and update records.
