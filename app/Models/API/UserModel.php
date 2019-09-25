@@ -57,4 +57,17 @@ class UserModel extends \App\Models\HelpModels\UserModel
         return $this->hasMany(UserRelatedModel::class);
     }
 
+    /**
+     * Delete the model from the database.
+     *
+     * @return bool|null
+     *
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        $this->userRelatedModels()->delete();
+        return parent::delete();
+    }
+
 }

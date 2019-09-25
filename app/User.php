@@ -111,4 +111,17 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    /**
+     * Delete the model from the database.
+     *
+     * @return bool|null
+     *
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        $this->userModels()->delete();
+        return parent::delete();
+    }
+
 }
