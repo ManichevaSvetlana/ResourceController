@@ -40,6 +40,9 @@ Replace lines with database information with real data.
 Then run:
 
 ~~~~ 
+php artisan key:generate
+~~~~
+~~~~ 
 php artisan migrate	--seed
 ~~~~
 ~~~~ 
